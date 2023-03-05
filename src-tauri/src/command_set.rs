@@ -25,6 +25,16 @@ pub fn add_cipher(
 }
 
 #[tauri::command]
+pub fn del_cipher(conn: tauri::State<DbConn>, uid: &str) -> bool {
+    conn.db.lock().unwrap().delete_data(uid).is_ok()
+}
+
+#[tauri::command]
+pub fn upt_cipher(conn: tauri::State<DbConn>, cipher: Cipher) -> bool {
+    conn.db.lock().unwrap().update_data(cipher).is_ok()
+}
+
+#[tauri::command]
 pub fn get_all(conn: tauri::State<DbConn>) -> Vec<Cipher> {
     conn.db.lock().unwrap().get_all_data()
 }

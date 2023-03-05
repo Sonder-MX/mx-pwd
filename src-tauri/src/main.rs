@@ -23,7 +23,9 @@ fn main() {
         .manage(DbConn {
             db: Mutex::from(pwd_tb),
         })
-        .invoke_handler(tauri::generate_handler![add_cipher, get_all])
+        .invoke_handler(tauri::generate_handler![
+            add_cipher, del_cipher, upt_cipher, get_all
+        ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

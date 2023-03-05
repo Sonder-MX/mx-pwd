@@ -46,6 +46,30 @@ impl DBC {
         )
     }
 
+    pub fn delete_data(&self, uid: &str) -> Result<usize> {
+        self.conn.execute(
+            &format!("DELETE FROM {} WHERE uid = ?", TB_NAME),
+            params![uid],
+        )
+    }
+
+    // 修改一个密码
+    pub fn update_data(&self, cipher: Cipher) -> Result<usize> {
+        self.conn.execute(
+            &format!(
+                "UPDATE {} SET station = ?, username = ?, password = ?, desc = ? WHERE uid = ?",
+                TB_NAME
+            ),
+            params![
+                cipher.station,
+                cipher.username,
+                cipher.password,
+                cipher.desc,
+                cipher.uid
+            ],
+        )
+    }
+
     pub fn get_all_data(&self) -> Vec<Cipher> {
         let mut stmt = self
             .conn
