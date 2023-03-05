@@ -1,20 +1,30 @@
-use crate::pmanage::operation::Cipher;
+use std::sync::Mutex;
 
-#[tauri::command]
-pub fn add_pwd(station: &str, username: &str, password: &str, desc: &str) {
-    let cipher = Cipher::new(
-        station.to_string(),
-        username.to_string(),
-        password.to_string(),
-        Some(desc.to_string()),
-    );
-    match cipher.insert_data() {
-        Ok(val) => println!("{} rows affected", val),
-        Err(e) => println!("Error: {}", e),
-    }
+use crate::cipher_manage::cipher::Cipher;
+use crate::db_opt::DBC;
+
+pub struct DbConn {
+    pub db: Mutex<DBC>,
 }
 
 #[tauri::command]
-pub fn get_all() -> Vec<Cipher> {
-    Cipher::select_all()
+pub fn add_cipher(
+    conn: tauri::State<DbConn>,
+    station: &str,
+    username: &str,
+    pwd: &str,
+    desc: &str,
+) -> bool {
+    let cipher = Cipher::new(
+        station.to_string(),
+        username.to_string(),
+        pwd.to_string(),
+        desc.to_string(),
+    );
+    conn.db.lock().unwrap().insert_data(cipher).is_ok()
+}
+
+#[tauri::command]
+pub fn get_all(conn: tauri::State<DbConn>) -> Vec<Cipher> {
+    conn.db.lock().unwrap().get_all_data()
 }

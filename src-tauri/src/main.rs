@@ -3,21 +3,27 @@
     windows_subsystem = "windows"
 )]
 
+mod cipher_manage;
 mod command_set;
 mod db_opt;
-mod pmanage;
+
+use std::{fs, path::Path, sync::Mutex};
 
 use command_set::*;
-
-// Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
-#[tauri::command]
-fn greet(name: &str) -> String {
-    format!("Hello, {}! You've been greeted from Rust!", name)
-}
+use db_opt::DBC;
 
 fn main() {
+    if !Path::new("./userdata").exists() {
+        fs::create_dir("./userdata").unwrap();
+    }
+
+    let pwd_tb = DBC::new();
+
     tauri::Builder::default()
-        .invoke_handler(tauri::generate_handler![greet, add_pwd, get_all])
+        .manage(DbConn {
+            db: Mutex::from(pwd_tb),
+        })
+        .invoke_handler(tauri::generate_handler![add_cipher, get_all])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
