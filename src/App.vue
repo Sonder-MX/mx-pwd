@@ -1,10 +1,22 @@
 <template>
-  <AddPwd></AddPwd>
+  <HeaderMx />
+  <div class="container">
+    <PwdList />
+  </div>
 </template>
 
 <script setup>
-// import Greet from "./components/Greet.vue"
-import AddPwd from "./components/AddPwd.vue"
+import HeaderMx from "./components/HeaderMx.vue"
+import PwdList from "./views/PwdList.vue"
 </script>
 
-<style scoped></style>
+<style>
+* {
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  margin-top: 40px;
+}
+</style>
