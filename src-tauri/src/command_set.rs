@@ -30,7 +30,21 @@ pub fn del_cipher(conn: tauri::State<DbConn>, uid: &str) -> bool {
 }
 
 #[tauri::command]
-pub fn upt_cipher(conn: tauri::State<DbConn>, cipher: Cipher) -> bool {
+pub fn upt_cipher(
+    conn: tauri::State<DbConn>,
+    uid: &str,
+    station: &str,
+    username: &str,
+    pwd: &str,
+    desc: &str,
+) -> bool {
+    let cipher = Cipher {
+        uid: uid.to_string(),
+        station: station.to_string(),
+        username: username.to_string(),
+        password: pwd.to_string(),
+        desc: desc.to_string(),
+    };
     conn.db.lock().unwrap().update_data(cipher).is_ok()
 }
 

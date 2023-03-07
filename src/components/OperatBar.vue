@@ -10,7 +10,7 @@
       <button type="button" @click="searchPwd">搜索</button>
     </div>
   </div>
-  <ModalPage v-show="showModal" :changeShowModal="changeShowModal" title="新建" />
+  <ModalPage v-if="showModal" :changeShowModal="changeShowModal" title="新建" />
 </template>
 
 <script setup>

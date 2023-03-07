@@ -19,4 +19,19 @@ import PwdList from "./views/PwdList.vue"
 .container {
   margin-top: 40px;
 }
+
+.btn {
+  padding: 3px 8px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.btn:hover {
+  opacity: 0.8;
+}
+
+.btn:active {
+  opacity: 0.6;
+}
 </style>

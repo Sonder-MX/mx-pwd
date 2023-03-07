@@ -1,6 +1,6 @@
 use nanoid::nanoid;
 
-#[derive(serde::Serialize, serde::Deserialize)]
+#[derive(serde::Serialize, serde::Deserialize, Debug)]
 pub struct Cipher {
     pub uid: String,
     pub station: String,

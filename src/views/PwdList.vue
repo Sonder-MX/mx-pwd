@@ -5,7 +5,7 @@
       <thead>
         <tr>
           <th>站点</th>
-          <th>用户名</th>
+          <th>账号</th>
           <th>密码</th>
           <th>描述</th>
           <th>操作</th>
@@ -26,14 +26,18 @@
           <td>{{ item.password }}</td>
           <td>{{ item.desc }}</td>
           <td>
-            <button type="button" class="btn btn-primary" @click="editPwd">编辑</button>&nbsp;
-            <button type="button" class="btn btn-danger">删除</button>
+            <button type="button" class="btn btn-primary" @click="editPwd(item)">编辑</button>&nbsp;
+            <button type="button" class="btn btn-danger" @click="delPwd(item.uid)">删除</button>
           </td>
         </tr>
       </tbody>
     </table>
   </div>
-  <ModalPage v-show="showModal" :changeShowModal="changeShowModal" title="编辑" />
+  <ModalPage
+    v-if="showModal"
+    :changeShowModal="changeShowModal"
+    title="编辑"
+    :editInfo="editInfo" />
 </template>
 
 <script setup>
@@ -43,16 +47,24 @@ import ModalPage from "../components/ModalPage.vue"
 import { ref, onMounted } from "vue"
 import { invoke } from "@tauri-apps/api/tauri"
 
-const pList = ref([])
-const errMsg = ref("")
-const showModal = ref(false)
+let pList = ref([])
+let errMsg = ref("")
+let showModal = ref(false)
+let editInfo = ref({})
 
 function changeShowModal() {
   showModal.value = !showModal.value
 }
 
-function editPwd() {
+function editPwd(pwdObj) {
+  editInfo.value = pwdObj
   changeShowModal()
+}
+
+function delPwd(uid) {
+  invoke("del_cipher", { uid }).then(() => {
+    getAll()
+  })
 }
 
 function getAll() {
@@ -107,13 +119,6 @@ onMounted(() => {
   background-color: #e2e2e2;
 }
 
-.btn {
-  padding: 3px 8px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
 .btn-primary {
   font-size: smaller;
   background-color: #007bff;
@@ -124,13 +129,5 @@ onMounted(() => {
   font-size: smaller;
   background-color: #dc3545;
   color: #fff;
-}
-
-.btn:hover {
-  opacity: 0.8;
-}
-
-.btn:active {
-  opacity: 0.6;
 }
 </style>
