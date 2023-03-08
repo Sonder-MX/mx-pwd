@@ -4,21 +4,34 @@
       <button class="btn-success" type="button" @click="addPwd">新建</button>
     </div>
     <div class="search-box">
-      <label>
-        <input type="text" placeholder="站点检索" v-model="search" />
-      </label>
-      <button type="button" @click="searchPwd">搜索</button>
+      <label for="search-inp"> 搜索 </label>
+      <input id="search-inp" type="text" placeholder="站点检索" v-model="search" />
     </div>
   </div>
-  <ModalPage v-if="showModal" :changeShowModal="changeShowModal" title="新建" />
+  <ModalPage
+    v-if="showModal"
+    :changeShowModal="changeShowModal"
+    title="新建"
+    :getAll="props.getAll" />
 </template>
 
 <script setup>
-import { ref } from "vue"
+import { ref, watch } from "vue"
 import ModalPage from "./ModalPage.vue"
 
-const search = ref("")
-const showModal = ref(false)
+const props = defineProps({
+  changeSearch: {
+    type: Function,
+    required: true,
+  },
+  getAll: {
+    type: Function,
+    required: true,
+  },
+})
+
+let search = ref("")
+let showModal = ref(false)
 
 function changeShowModal() {
   showModal.value = !showModal.value
@@ -28,7 +41,9 @@ function addPwd() {
   changeShowModal()
 }
 
-function searchPwd() {}
+watch(search, () => {
+  props.changeSearch(search.value)
+})
 </script>
 
 <style scoped>
@@ -38,7 +53,7 @@ function searchPwd() {}
 }
 
 .operation-box {
-  margin-left: 5px;
+  margin-left: 10px;
   float: left;
 }
 
@@ -60,6 +75,7 @@ function searchPwd() {}
 
 .search-box {
   float: right;
+  margin-right: 10px;
 }
 
 .search-box input {
@@ -67,8 +83,8 @@ function searchPwd() {}
   height: 30px;
   font-size: 14px;
   border: 1px solid #585757;
-  border-top-left-radius: 8px;
-  border-bottom-left-radius: 8px;
+  border-top-right-radius: 8px;
+  border-bottom-right-radius: 8px;
   padding: 0 10px;
 }
 
@@ -77,19 +93,11 @@ function searchPwd() {}
   border: 1px solid #000;
 }
 
-.search-box button {
-  width: 50px;
-  height: 32px;
-  border: 1px solid #585757;
-  border-left: none;
-  border-top-right-radius: 8px;
-  border-bottom-right-radius: 8px;
-  margin-right: 5px;
-  background-color: #fff;
-  cursor: pointer; /* 鼠标变成手指 */
-}
-
-.search-box button:hover {
+.search-box label {
+  padding: 7px;
+  font-size: smaller;
+  border-top-left-radius: 8px;
+  border-bottom-left-radius: 8px;
   background-color: #585757;
   color: #fff;
 }

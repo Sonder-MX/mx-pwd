@@ -55,6 +55,10 @@ const props = defineProps({
     type: Object,
     required: false,
   },
+  getAll: {
+    type: Function,
+    required: true,
+  },
 })
 
 const closeModal = () => {
@@ -85,8 +89,7 @@ function submit() {
       .then(() => {
         closeModal()
       })
-      .catch((e) => {
-        console.log(e)
+      .catch(() => {
         console.log("更新失败！")
       })
   } else {
@@ -103,6 +106,7 @@ function submit() {
         console.log("添加失败！")
       })
   }
+  props.getAll()
 }
 </script>
 

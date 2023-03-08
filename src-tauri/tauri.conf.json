@@ -33,7 +33,7 @@
         "icons/icon.icns",
         "icons/icon.ico"
       ],
-      "identifier": "com.tauri.dev",
+      "identifier": "com.tauri.mx-pwd",
       "longDescription": "",
       "macOS": {
         "entitlements": null,

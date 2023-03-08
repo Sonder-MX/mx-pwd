@@ -1,5 +1,5 @@
 <template>
-  <OperatBar />
+  <OperatBar :changeSearch="changeSearch" :getAll="getAll" />
   <div class="list-content">
     <table class="tab-pwd">
       <thead>
@@ -11,7 +11,7 @@
           <th>操作</th>
         </tr>
       </thead>
-      <tbody v-if="pList.length === 0">
+      <tbody v-if="cipherArr.length === 0">
         <tr>
           <td v-if="errMsg" colspan="5" style="color: red; text-align: center; padding: 30px 0">
             {{ errMsg }}
@@ -20,7 +20,7 @@
         </tr>
       </tbody>
       <tbody v-else>
-        <tr v-for="item in pList" :key="item.uid">
+        <tr v-for="item in cipherArr" :key="item.uid">
           <td>{{ item.station }}</td>
           <td>{{ item.username }}</td>
           <td>{{ item.password }}</td>
@@ -37,20 +37,32 @@
     v-if="showModal"
     :changeShowModal="changeShowModal"
     title="编辑"
-    :editInfo="editInfo" />
+    :editInfo="editInfo"
+    :getAll="getAll" />
 </template>
 
 <script setup>
 import OperatBar from "../components/OperatBar.vue"
 import ModalPage from "../components/ModalPage.vue"
 
-import { ref, onMounted } from "vue"
+import { ref, onMounted, computed } from "vue"
 import { invoke } from "@tauri-apps/api/tauri"
 
 let pList = ref([])
 let errMsg = ref("")
 let showModal = ref(false)
 let editInfo = ref({})
+let searchContent = ref("")
+
+let cipherArr = computed(() => {
+  return pList.value.filter((item) => {
+    return item.station.includes(searchContent.value)
+  })
+})
+
+function changeSearch(search) {
+  searchContent.value = search
+}
 
 function changeShowModal() {
   showModal.value = !showModal.value
