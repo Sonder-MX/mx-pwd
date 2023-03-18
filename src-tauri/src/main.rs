@@ -20,15 +20,17 @@ fn main() {
         fs::create_dir("./userdata").unwrap();
     }
 
-    let pwd_tb = DBC::new();
-    let _pwd_tb = DBOC::new(DB_FILE);
+    let _pwd_tb = DBC::new();
+    let pwd_tb = DBOC::new(DB_FILE);
 
     tauri::Builder::default()
         .manage(DbConn {
-            db: Mutex::from(pwd_tb),
+            db: Mutex::from(_pwd_tb),
+            tb: Mutex::from(pwd_tb),
         })
         .invoke_handler(tauri::generate_handler![
-            add_cipher, del_cipher, upt_cipher, get_all
+            add_cipher, del_cipher, upt_cipher, get_all, // old api
+            pwd_list, pwd_detail
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

@@ -1,6 +1,6 @@
-mod delete;
-mod select;
-mod update;
+pub mod delete;
+pub mod select;
+pub mod update;
 
 use rusqlite::Connection;
 

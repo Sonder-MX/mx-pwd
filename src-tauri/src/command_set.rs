@@ -1,10 +1,13 @@
 use std::sync::Mutex;
 
 use crate::cipher_manage::cipher::Cipher;
+use crate::cipher_manage::db_op::select::SelectList;
+use crate::cipher_manage::db_op::DBOC;
 use crate::db_opt::DBC;
 
 pub struct DbConn {
     pub db: Mutex<DBC>,
+    pub tb: Mutex<DBOC>,
 }
 
 #[tauri::command]
@@ -51,4 +54,17 @@ pub fn upt_cipher(
 #[tauri::command]
 pub fn get_all(conn: tauri::State<DbConn>) -> Vec<Cipher> {
     conn.db.lock().unwrap().get_all_data()
+}
+
+// new api
+// 密码列表
+#[tauri::command]
+pub fn pwd_list(conn: tauri::State<DbConn>) -> Vec<SelectList> {
+    conn.tb.lock().unwrap().get_cipher_list()
+}
+
+// 密码详情
+#[tauri::command]
+pub fn pwd_detail(conn: tauri::State<DbConn>, uid: &str) -> Result<Cipher, &'static str> {
+    conn.tb.lock().unwrap().get_cipher_detail(uid)
 }
