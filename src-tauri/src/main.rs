@@ -30,7 +30,7 @@ fn main() {
         })
         .invoke_handler(tauri::generate_handler![
             add_cipher, del_cipher, upt_cipher, get_all, // old api
-            pwd_list, pwd_detail, del_pwd
+            add_pwd, pwd_list, pwd_detail, del_pwd
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

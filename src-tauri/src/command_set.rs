@@ -57,6 +57,24 @@ pub fn get_all(conn: tauri::State<DbConn>) -> Vec<Cipher> {
 }
 
 // new api
+// 添加
+#[tauri::command]
+pub fn add_pwd(
+    conn: tauri::State<DbConn>,
+    station: &str,
+    username: &str,
+    pwd: &str,
+    desc: &str,
+) -> bool {
+    let cipher = Cipher::new(
+        station.to_string(),
+        username.to_string(),
+        pwd.to_string(),
+        desc.to_string(),
+    );
+    conn.tb.lock().unwrap().insert_cipher(cipher)
+}
+
 // 密码列表
 #[tauri::command]
 pub fn pwd_list(conn: tauri::State<DbConn>) -> Vec<SelectList> {
