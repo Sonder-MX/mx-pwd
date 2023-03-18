@@ -68,3 +68,9 @@ pub fn pwd_list(conn: tauri::State<DbConn>) -> Vec<SelectList> {
 pub fn pwd_detail(conn: tauri::State<DbConn>, uid: &str) -> Result<Cipher, &'static str> {
     conn.tb.lock().unwrap().get_cipher_detail(uid)
 }
+
+// 删除密码
+#[tauri::command]
+pub fn del_pwd(conn: tauri::State<DbConn>, uid: &str) -> bool {
+    conn.tb.lock().unwrap().delete_cipher(uid)
+}
