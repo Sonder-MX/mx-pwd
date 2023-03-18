@@ -9,8 +9,11 @@ mod db_opt;
 
 use std::{fs, path::Path, sync::Mutex};
 
+use cipher_manage::db_op::DBOC;
 use command_set::*;
 use db_opt::DBC;
+
+const DB_FILE: &str = "./userdata/db.sqlite3";
 
 fn main() {
     if !Path::new("./userdata").exists() {
@@ -18,6 +21,7 @@ fn main() {
     }
 
     let pwd_tb = DBC::new();
+    let _pwd_tb = DBOC::new(DB_FILE);
 
     tauri::Builder::default()
         .manage(DbConn {

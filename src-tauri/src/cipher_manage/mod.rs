@@ -1,4 +1,5 @@
 pub mod cipher;
+pub mod db_op;
 
 pub const TB_NAME: &str = "Cipher";
 pub const FIELD: [&str; 5] = ["uid", "station", "username", "password", "desc"];
