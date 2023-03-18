@@ -92,3 +92,23 @@ pub fn pwd_detail(conn: tauri::State<DbConn>, uid: &str) -> Result<Cipher, &'sta
 pub fn del_pwd(conn: tauri::State<DbConn>, uid: &str) -> bool {
     conn.tb.lock().unwrap().delete_cipher(uid)
 }
+
+// 更新密码
+#[tauri::command]
+pub fn upt_pwd(
+    conn: tauri::State<DbConn>,
+    uid: &str,
+    station: &str,
+    username: &str,
+    pwd: &str,
+    desc: &str,
+) -> bool {
+    let cipher = Cipher {
+        uid: uid.to_string(),
+        station: station.to_string(),
+        username: username.to_string(),
+        password: pwd.to_string(),
+        desc: desc.to_string(),
+    };
+    conn.tb.lock().unwrap().update_cipher(cipher)
+}
