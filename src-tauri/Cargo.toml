@@ -1,10 +1,10 @@
 [package]
 name = "mx-pwd"
-version = "0.0.0"
-description = "A Tauri App"
+version = "0.0.1"
+description = "A simple password manager"
 authors = ["Sonder-MX"]
-license = ""
-repository = ""
+license = "GPL-3.0"
+repository = "https://github.com/Sonder-MX/mx-pwd"
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
