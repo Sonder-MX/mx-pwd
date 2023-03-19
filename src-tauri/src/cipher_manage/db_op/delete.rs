@@ -5,7 +5,7 @@ impl DBOC {
     // 删除密码
     pub fn delete_cipher(&self, uid: &str) -> bool {
         self.conn
-            .execute("DELETE FROM ? WHERE uid = ?", (TB_NAME, uid))
+            .execute(&format!("DELETE FROM {TB_NAME} WHERE uid = ?"), [uid])
             .is_ok()
     }
 }
