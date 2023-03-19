@@ -1,7 +1,7 @@
 <template>
   <div class="common-layout">
     <el-container>
-      <el-aside width="28vw">
+      <el-aside width="30vw">
         <PwdList></PwdList>
       </el-aside>
       <el-container>

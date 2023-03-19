@@ -42,22 +42,25 @@
 </template>
 
 <script setup>
-import { ref, watch } from "vue"
+import { ref, watch, onMounted } from "vue"
 import { useRoute } from "vue-router"
 import { invoke } from "@tauri-apps/api/tauri"
 
 const route = useRoute()
 const pwdInfo = ref({})
 
+function get_pwd_detail(uuid) {
+  invoke("pwd_detail", { uid: uuid }).then((res) => {
+    pwdInfo.value = res
+  })
+}
+
 watch(
   () => route.params.uid,
-  (newVal) => {
-    invoke("pwd_detail", { uid: newVal }).then((res) => {
-      pwdInfo.value = res
-    })
-    console.log(pwdInfo.value)
-  }
+  (newVal) => get_pwd_detail(newVal)
 )
+
+onMounted(() => get_pwd_detail(route.params.uid))
 </script>
 
 <style scoped>

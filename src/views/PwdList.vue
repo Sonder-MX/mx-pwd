@@ -8,7 +8,7 @@
         <el-menu :default-active="defaultActive" @select="handleSelect">
           <el-menu-item v-for="pwd in pwdList" :key="pwd.uid" :index="pwd.uid">
             <el-icon><Promotion /></el-icon>
-            {{ pwd.station }}--{{ pwd.username }}
+            {{ pwd.station }}-{{ pwd.username }}
           </el-menu-item>
         </el-menu>
       </el-main>
@@ -29,6 +29,7 @@ onMounted(() => {
   invoke("pwd_list").then((res) => {
     pwdList.value = res
     defaultActive.value = res[0].uid
+    router.push({ name: "Detail", params: { uid: res[0].uid } })
   })
 })
 
@@ -39,7 +40,24 @@ const handleSelect = (key) => {
 </script>
 
 <style scoped>
+* {
+  user-select: none;
+}
+
+.el-header {
+  height: 0;
+  padding-bottom: 8px;
+}
+
 .el-menu-item {
   font-size: 16px;
+}
+
+.el-menu {
+  --el-menu-level: none !important;
+}
+
+.el-menu-item {
+  height: 48px;
 }
 </style>
