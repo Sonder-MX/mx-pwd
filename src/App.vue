@@ -3,11 +3,15 @@
   <div class="container">
     <PwdList />
   </div>
+  <div>
+    <TestApi />
+  </div>
 </template>
 
 <script setup>
 import HeaderMx from "./components/HeaderMx.vue"
 import PwdList from "./views/PwdList.vue"
+import TestApi from "./views/TestApi.vue"
 </script>
 
 <style>
