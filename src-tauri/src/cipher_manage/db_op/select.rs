@@ -34,9 +34,9 @@ impl DBOC {
     pub fn get_cipher_detail(&self, uid: &str) -> Result<Cipher, &'static str> {
         let mut statement = self
             .conn
-            .prepare(&format!("SELECT * FROM {TB_NAME} WHERE uid = {uid}"))
+            .prepare(&format!("SELECT * FROM {TB_NAME} WHERE uid = :uid"))
             .unwrap();
-        let cipher_row = statement.query_map((), |row| {
+        let cipher_row = statement.query_map(&[(":uid", &uid)], |row| {
             Ok(Cipher {
                 uid: row.get(0)?,
                 station: row.get(1)?,
@@ -45,10 +45,10 @@ impl DBOC {
                 desc: row.get(4)?,
             })
         });
-        let cipher = cipher_row.unwrap().next().unwrap();
-        match cipher {
-            Ok(data) => Ok(data),
-            Err(_) => Err("No Data"),
-        }
+        let cipher = match cipher_row.unwrap().next() {
+            Some(val) => val.unwrap(),
+            None => return Err("No Data"),
+        };
+        Ok(cipher)
     }
 }
