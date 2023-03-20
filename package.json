@@ -21,6 +21,7 @@
     "@tauri-apps/cli": "^1.2.2",
     "@vitejs/plugin-vue": "^4.0.0",
     "naive-ui": "^2.34.3",
+    "sass": "^1.59.3",
     "unplugin-auto-import": "^0.15.1",
     "unplugin-vue-components": "^0.24.1",
     "vite": "^4.0.0"

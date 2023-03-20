@@ -8,7 +8,19 @@
         </span>
         <div>
           <el-button type="primary" icon="Edit" circle />
-          <el-button type="danger" icon="Delete" circle />
+          <el-popconfirm
+            :hide-after="100"
+            confirm-button-text="是"
+            confirm-button-type="danger"
+            cancel-button-text="否"
+            cancel-button-type="info"
+            icon="InfoFilled"
+            title="是否删除？"
+            @confirm="delete_pwd(pwdInfo.uid)">
+            <template #reference>
+              <el-button type="danger" icon="Delete" circle></el-button>
+            </template>
+          </el-popconfirm>
         </div>
       </div>
     </template>
@@ -44,15 +56,41 @@
 <script setup>
 import { ref, watch, onMounted } from "vue"
 import { useRoute } from "vue-router"
+import { ElMessage } from "element-plus"
 import { invoke } from "@tauri-apps/api/tauri"
 
 const route = useRoute()
 const pwdInfo = ref({})
 
+const successMsg = (msg) => {
+  ElMessage({
+    message: msg,
+    type: "success",
+    duration: 2000,
+  })
+}
+
+const errorMsg = (msg) => {
+  ElMessage({
+    message: msg,
+    type: "error",
+    duration: 2000,
+  })
+}
+
 function get_pwd_detail(uuid) {
   invoke("pwd_detail", { uid: uuid }).then((res) => {
     pwdInfo.value = res
   })
+}
+
+function delete_pwd(uuid) {
+  invoke("del_pwd", { uid: uuid })
+    .then((res) => {
+      if (res) successMsg("删除成功")
+      else errorMsg("删除失败")
+    })
+    .catch(() => errorMsg("删除失败"))
 }
 
 watch(
