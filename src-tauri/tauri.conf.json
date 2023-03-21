@@ -59,11 +59,13 @@
     },
     "windows": [
       {
-        "fullscreen": false,
-        "height": 600,
-        "resizable": true,
         "title": "Mx-Pwd",
-        "width": 800
+        "width": 1000,
+        "height": 600,
+        "minWidth": 800,
+        "minHeight": 520,
+        "center": true,
+        "resizable": true
       }
     ]
   }
