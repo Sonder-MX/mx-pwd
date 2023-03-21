@@ -7,7 +7,11 @@
           {{ pwdInfo.station }}
         </span>
         <div>
-          <el-button type="primary" icon="Edit" circle />
+          <el-button
+            type="primary"
+            icon="Edit"
+            circle
+            @click="dialogStore.changeVisible('编辑', pwdInfo)" />
           <el-popconfirm
             :hide-after="100"
             confirm-button-text="是"
@@ -56,27 +60,12 @@
 <script setup>
 import { ref, watch, onMounted } from "vue"
 import { useRoute } from "vue-router"
-import { ElMessage } from "element-plus"
 import { invoke } from "@tauri-apps/api/tauri"
+import { useDialogFormStore, successMsg, errorMsg } from "../stores/dialogForm"
 
 const route = useRoute()
 const pwdInfo = ref({})
-
-const successMsg = (msg) => {
-  ElMessage({
-    message: msg,
-    type: "success",
-    duration: 2000,
-  })
-}
-
-const errorMsg = (msg) => {
-  ElMessage({
-    message: msg,
-    type: "error",
-    duration: 2000,
-  })
-}
+const dialogStore = useDialogFormStore()
 
 function get_pwd_detail(uuid) {
   invoke("pwd_detail", { uid: uuid }).then((res) => {
@@ -106,6 +95,7 @@ onMounted(() => get_pwd_detail(route.params.uid))
   display: flex;
   justify-content: space-between;
   align-items: center;
+  user-select: none;
 }
 
 .card-header span {
@@ -121,6 +111,7 @@ onMounted(() => get_pwd_detail(route.params.uid))
   display: flex;
   align-items: center;
   justify-content: left;
+  user-select: none;
   padding: 8px 0;
   color: rgb(91, 91, 91);
   background-color: #f2f2f5;

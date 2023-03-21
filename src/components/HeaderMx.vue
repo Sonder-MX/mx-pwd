@@ -12,8 +12,12 @@
           </span>
           <template #dropdown>
             <el-dropdown-menu>
-              <el-dropdown-item>关于</el-dropdown-item>
-              <el-dropdown-item>支持</el-dropdown-item>
+              <el-dropdown-item>
+                <el-icon><Postcard /></el-icon> 关于
+              </el-dropdown-item>
+              <el-dropdown-item>
+                <el-icon><Star /></el-icon> 支持
+              </el-dropdown-item>
             </el-dropdown-menu>
           </template>
         </el-dropdown>
@@ -40,5 +44,6 @@ let inpSearch = ref("")
   cursor: pointer;
   display: flex;
   align-items: center;
+  user-select: none;
 }
 </style>
