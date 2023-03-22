@@ -62,6 +62,7 @@ import { ref, watch, onMounted } from "vue"
 import { useRoute } from "vue-router"
 import { invoke } from "@tauri-apps/api/tauri"
 import { useDialogFormStore, successMsg, errorMsg } from "../stores/dialogForm"
+import { useCipherListStore } from "../stores/cipherList"
 
 const route = useRoute()
 const pwdInfo = ref({})
@@ -76,8 +77,10 @@ function get_pwd_detail(uuid) {
 function delete_pwd(uuid) {
   invoke("del_pwd", { uid: uuid })
     .then((res) => {
-      if (res) successMsg("删除成功")
-      else errorMsg("删除失败")
+      if (res) {
+        successMsg("删除成功")
+        useCipherListStore().getCipherList()
+      } else errorMsg("删除失败")
     })
     .catch(() => errorMsg("删除失败"))
 }
