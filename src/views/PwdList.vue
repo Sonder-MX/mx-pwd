@@ -5,8 +5,8 @@
     </el-header>
     <el-divider />
     <el-main>
-      <el-menu :default-active="defaultActive" @select="handleSelect">
-        <el-menu-item v-for="pwd in pwdList" :key="pwd.uid" :index="pwd.uid">
+      <el-menu :default-active="cipherStore.activeId" @select="handleSelect">
+        <el-menu-item v-for="pwd in cipherStore.filteredCipherList" :key="pwd.uid" :index="pwd.uid">
           <el-icon><Link /></el-icon>
           {{ pwd.station }}-{{ pwd.username }}
         </el-menu-item>
@@ -24,27 +24,19 @@
 </template>
 
 <script setup>
-import { invoke } from "@tauri-apps/api/tauri"
-import { ref, onMounted } from "vue"
 import { useRouter } from "vue-router"
+import { useCipherListStore } from "../stores/cipherList"
 import { useDialogFormStore } from "../stores/dialogForm"
 import DialogBox from "../components/DialogBox.vue"
 
 const router = useRouter()
-const pwdList = ref([])
-const defaultActive = ref("")
+const cipherStore = useCipherListStore()
 const dialogStore = useDialogFormStore()
 
-onMounted(() => {
-  invoke("pwd_list").then((res) => {
-    pwdList.value = res
-    defaultActive.value = res[0].uid
-    router.push({ name: "Detail", params: { uid: res[0].uid } })
-  })
-})
+cipherStore.getCipherList()
 
 const handleSelect = (key) => {
-  defaultActive.value = key
+  cipherStore.activeId = key
   router.push({ name: "Detail", params: { uid: key } })
 }
 </script>

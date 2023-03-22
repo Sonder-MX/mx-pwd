@@ -2,7 +2,11 @@
   <div>
     <el-row>
       <el-col :span="12">
-        <el-input v-model="inpSearch" placeholder="搜索登录信息" :prefix-icon="Search" clearable />
+        <el-input
+          v-model.trim="cipherListStore.searchText"
+          placeholder="搜索登录信息"
+          prefix-icon="Search"
+          clearable />
       </el-col>
       <el-col :span="12" class="my-dropdown-box">
         <el-dropdown>
@@ -27,10 +31,9 @@
 </template>
 
 <script setup>
-import { ref } from "vue"
-import { Search } from "@element-plus/icons-vue"
+import { useCipherListStore } from "../stores/cipherList"
 
-let inpSearch = ref("")
+const cipherListStore = useCipherListStore()
 </script>
 
 <style scoped>

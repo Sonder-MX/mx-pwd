@@ -10,20 +10,20 @@
       ref="formRuleRef"
       :rules="formRules">
       <el-form-item label="站点" prop="station">
-        <el-input placeholder="https://exp.com" v-model="formModel.station"></el-input>
+        <el-input placeholder="https://exp.com" v-model.trim="formModel.station"></el-input>
       </el-form-item>
       <el-form-item label="用户名" prop="username">
-        <el-input placeholder="请输入用户名" v-model="formModel.username"></el-input>
+        <el-input placeholder="请输入用户名" v-model.trim="formModel.username"></el-input>
       </el-form-item>
       <el-form-item label="密码" prop="pwd">
         <el-input
           placeholder="请输入密码"
           type="password"
-          v-model="formModel.pwd"
+          v-model.trim="formModel.pwd"
           show-password></el-input>
       </el-form-item>
       <el-form-item label="描述">
-        <el-input placeholder="请输入描述" v-model="formModel.desc"></el-input>
+        <el-input placeholder="请输入描述" v-model.trim="formModel.desc"></el-input>
       </el-form-item>
     </el-form>
     <template #footer>
@@ -45,7 +45,7 @@ import { useDialogFormStore } from "../stores/dialogForm"
 
 const formRuleRef = ref()
 const dialogStore = useDialogFormStore()
-const formRules = dialogStore.getFormRules
+const formRules = dialogStore.dialogFormRules
 const formModel = dialogStore.dialogFormModel
 </script>
 

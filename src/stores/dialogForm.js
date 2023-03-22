@@ -1,6 +1,7 @@
 import { defineStore } from "pinia"
 import { invoke } from "@tauri-apps/api"
 import { ElMessage } from "element-plus"
+import { useCipherListStore } from "./cipherList"
 
 export const successMsg = (msg) => {
   ElMessage({
@@ -67,11 +68,6 @@ export const useDialogFormStore = defineStore({
       pwd: [{ required: true, message: "请输入密码", trigger: "blur" }],
     },
   }),
-  getters: {
-    getFormRules() {
-      return this.dialogFormRules
-    },
-  },
   actions: {
     blankForm() {
       this.dialogFormModel.uid = ""
@@ -81,8 +77,6 @@ export const useDialogFormStore = defineStore({
       this.dialogFormModel.desc = ""
     },
     changeVisible(formTitle, formData = null) {
-      this.dialogFormVisible = !this.dialogFormVisible
-      this.dialogFormTitle = formTitle
       this.blankForm()
       if (formData) {
         this.dialogFormModel.uid = formData.uid
@@ -90,8 +84,9 @@ export const useDialogFormStore = defineStore({
         this.dialogFormModel.username = formData.username
         this.dialogFormModel.pwd = formData.password
         this.dialogFormModel.desc = formData.desc
-        console.log("执行")
       }
+      this.dialogFormTitle = formTitle
+      this.dialogFormVisible = !this.dialogFormVisible
     },
     submitFormData(formEl) {
       if (!formEl) return
@@ -103,6 +98,8 @@ export const useDialogFormStore = defineStore({
           } else {
             addPwd(this.dialogFormModel)
           }
+          const cipherStore = useCipherListStore()
+          cipherStore.getCipherList()
           this.blankForm()
         }
       })
