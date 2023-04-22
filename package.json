@@ -1,7 +1,7 @@
 {
   "name": "mx-pwd",
   "version": "0.0.1",
-  "description": "A Quasar ProjectPassword management tool",
+  "description": "Password Management Tool",
   "productName": "MXPWD",
   "author": "SonderMX <sonder-mx@outlook.com>",
   "private": true,
