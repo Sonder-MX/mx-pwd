@@ -7,12 +7,12 @@ mod invokes;
 mod models;
 mod sqdb;
 
-use models::cipher::Cipher;
-use sqdb::DBState;
 use std::{fs, path::Path};
 
-use crate::invokes::cipher_invoke::*;
-use crate::models::Models;
+use invokes::cipher_invoke::*;
+use models::cipher::Cipher;
+use models::Models;
+use sqdb::DBState;
 
 fn main() {
     let user_folder = "./user";
@@ -24,7 +24,13 @@ fn main() {
 
     tauri::Builder::default()
         .manage(db_state)
-        .invoke_handler(tauri::generate_handler![get_cipher_list, get_cipher_detail])
+        .invoke_handler(tauri::generate_handler![
+            get_cipher_list,
+            get_cipher_detail,
+            add_cipher,
+            delete_cipher,
+            update_cipher
+        ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
