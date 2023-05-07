@@ -4,7 +4,7 @@
     "beforeDevCommand": "quasar dev",
     "devPath": "http://localhost:1420",
     "distDir": "../dist/spa",
-    "withGlobalTauri": false
+    "withGlobalTauri": true
   },
   "package": {
     "productName": "mx-pwd",
@@ -55,11 +55,14 @@
     },
     "windows": [
       {
-        "fullscreen": false,
-        "height": 600,
-        "resizable": true,
         "title": "MX-PWD",
-        "width": 800
+        "fullscreen": false,
+        "height": 550,
+        "width": 850,
+        "center": true,
+        "minHeight": 500,
+        "minWidth": 800,
+        "resizable": true
       }
     ]
   }
