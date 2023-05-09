@@ -48,14 +48,15 @@ impl Cipher {
         let rows = stmt
             .query_map([], |row| {
                 let mut map = HashMap::new();
-                map.insert(FIELDS[0].to_string(), row.get(0).unwrap());
-                map.insert(FIELDS[1].to_string(), row.get(1).unwrap());
-                map.insert(FIELDS[2].to_string(), row.get(2).unwrap());
+                map.insert(FIELDS[0].to_string(), row.get(0).unwrap()); // nid
+                map.insert(FIELDS[1].to_string(), row.get(1).unwrap()); // website
+                map.insert(FIELDS[2].to_string(), row.get(2).unwrap()); // username
                 Ok(map)
             })
             .unwrap();
         for row in rows {
-            vlist.push(row.unwrap());
+            // 按创建时间倒序
+            vlist.insert(0, row.unwrap());
         }
         vlist
     }
