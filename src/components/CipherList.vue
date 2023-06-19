@@ -1,6 +1,6 @@
 <template>
   <q-scroll-area class="fit">
-    <q-list padding>
+    <q-list>
       <q-item
         v-for="cipherItem in cipherStore.filteredCiphers"
         :key="cipherItem.nid"
@@ -17,6 +17,11 @@
           <q-item-label lines="1" caption>{{ cipherItem.username }}</q-item-label>
         </q-item-section>
       </q-item>
+
+      <q-item v-for="itm in 30" :key="itm"> list {{ itm }} </q-item>
+
+      <!-- 占位 -->
+      <div style="height: 50px"></div>
     </q-list>
   </q-scroll-area>
 </template>

@@ -1,14 +1,12 @@
 <template>
-  <div class="absolute-bottom bg-grey-2 text-black shadow-up-4">
-    <q-toolbar class="flex-center">
-      <q-btn
-        rounded
-        icon="las la-plus-circle"
-        label="添加登录信息"
-        color="light-blue-6"
-        class="q-px-xl"
-        @click="addLoginPrompt" />
-    </q-toolbar>
+  <div class="absolute-bottom add-btn-box">
+    <q-btn
+      rounded
+      icon="las la-plus-circle"
+      label="添加登录信息"
+      color="light-blue-6"
+      class="q-px-xl"
+      @click="addLoginPrompt" />
   </div>
 </template>
 
@@ -21,14 +19,17 @@ const $q = useQuasar()
 const addLoginPrompt = () => {
   $q.dialog({
     component: CustomDialog,
-    componentProps: {
-      title: "添加登录信息",
-      content: "添加登录信息",
-      ok: "添加",
-      cancel: "取消",
-    },
+    componentProps: {},
   })
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+.add-btn-box {
+  width: 100%;
+  height: 60px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+</style>
