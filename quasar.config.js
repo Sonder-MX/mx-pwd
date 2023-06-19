@@ -18,22 +18,14 @@ module.exports = configure(function (/* ctx */) {
     // app boot file (/src/boot)
     // --> boot files are part of "main.js"
     // https://v2.quasar.dev/quasar-cli-vite/boot-files
-    boot: [],
+    boot: ["invoke-cipher"],
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#css
     css: ["app.scss"],
 
     // https://github.com/quasarframework/quasar/tree/dev/extras
     extras: [
-      // 'ionicons-v4',
-      // 'mdi-v5',
-      // 'fontawesome-v6',
-      // 'eva-icons',
-      // 'themify',
-      // 'line-awesome',
-      // 'roboto-font-latin-ext', // this or either 'roboto-font', NEVER both!
-
-      "roboto-font", // optional, you are not bound to it
+      // "roboto-font", // optional, you are not bound to it
       // "material-icons", // optional, you are not bound to it
       "line-awesome",
     ],
@@ -80,7 +72,7 @@ module.exports = configure(function (/* ctx */) {
     framework: {
       config: {},
 
-      // iconSet: 'material-icons', // Quasar icon set
+      iconSet: "line-awesome", // Quasar icon set
       lang: "zh-CN", // Quasar language pack
 
       // For special cases outside of where the auto-import strategy can have an impact
@@ -91,7 +83,7 @@ module.exports = configure(function (/* ctx */) {
       // directives: [],
 
       // Quasar plugins
-      plugins: [],
+      plugins: ["Dialog"],
     },
 
     // animations: 'all', // --- includes all animations

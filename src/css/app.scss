@@ -1,1 +1,22 @@
 // app global css in SCSS form
+
+// 滚动条样式
+*::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: #ccc; // 滑块颜色
+  border-radius: 100px; // 滑块圆角
+}
+
+// 不可选中
+div,
+p,
+span {
+  // -webkit-user-select: none;
+  // -moz-user-select: none;
+  // -ms-user-select: none;
+  user-select: none;
+}
