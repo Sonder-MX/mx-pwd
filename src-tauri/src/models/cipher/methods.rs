@@ -62,25 +62,24 @@ impl Cipher {
     }
 
     // detail
-    pub fn detail(conn: &Connection, dnid: &str) -> Result<Vec<Cipher>> {
-        let mut stmt =
-            conn.prepare(&format!("SELECT * FROM {} WHERE nid = '{}'", TB_NAME, dnid))?;
-        let rows = stmt.query_map([], |row| {
-            Ok(Cipher {
-                nid: row.get(0)?,
-                website: row.get(1)?,
-                username: row.get(2)?,
-                password: row.get(3)?,
-                remark: row.get(4)?,
-                created: row.get(5)?,
-                updated: row.get(6)?,
+    pub fn detail(conn: &Connection, dnid: &str) -> Option<Result<Cipher>> {
+        let mut stmt = conn
+            .prepare(&format!("SELECT * FROM {} WHERE nid = '{}'", TB_NAME, dnid))
+            .unwrap();
+        let rows = stmt
+            .query_map([], |row| {
+                Ok(Cipher {
+                    nid: row.get(0)?,
+                    website: row.get(1)?,
+                    username: row.get(2)?,
+                    password: row.get(3)?,
+                    remark: row.get(4)?,
+                    created: row.get(5)?,
+                    updated: row.get(6)?,
+                })
             })
-        })?;
-        let mut vlist = Vec::new();
-        for row in rows {
-            vlist.push(row.unwrap());
-        }
-        Ok(vlist)
+            .unwrap();
+        rows.last()
     }
 
     // add cipher

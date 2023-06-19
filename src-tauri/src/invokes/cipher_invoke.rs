@@ -16,13 +16,18 @@ pub fn get_cipher_list(db_state: tauri::State<'_, DBState>) -> Vec<HashMap<Strin
 pub fn get_cipher_detail(
     db_state: tauri::State<'_, DBState>,
     dnid: &str,
-) -> Result<Vec<Cipher>, String> {
+) -> Result<Cipher, ResponseData> {
     let conn = db_state.conn.lock().unwrap();
-    let cipher_detail = Cipher::detail(&conn, dnid).unwrap();
-    if cipher_detail.len() == 0 {
-        return Err("Cipher not found!".into());
+    let cipher_detail = Cipher::detail(&conn, dnid);
+    if cipher_detail.is_none() {
+        Err(ResponseData::new(
+            404,
+            "Cipher detail not found!".into(),
+            json!(null),
+        ))
+    } else {
+        Ok(cipher_detail.unwrap().unwrap())
     }
-    Ok(cipher_detail)
 }
 
 #[tauri::command]
@@ -37,7 +42,7 @@ pub fn add_cipher(
     let res = Cipher::adder(&db_state, cipher);
     if res == 0 {
         Err(ResponseData::new(
-            0,
+            401,
             "Add cipher failed!".into(),
             json!({
                 "col": res,
@@ -45,7 +50,7 @@ pub fn add_cipher(
         ))
     } else {
         Ok(ResponseData::new(
-            1,
+            200,
             "Add cipher success!".into(),
             json!(
                 {
@@ -64,7 +69,7 @@ pub fn delete_cipher(
     let res = Cipher::deleter(&db_state, nid);
     if res == 0 {
         Err(ResponseData::new(
-            0,
+            401,
             "Delete cipher failed!".into(),
             json!({
                 "col": res,
@@ -72,7 +77,7 @@ pub fn delete_cipher(
         ))
     } else {
         Ok(ResponseData::new(
-            1,
+            200,
             "Delete cipher success!".into(),
             json!(
                 {
@@ -103,7 +108,7 @@ pub fn update_cipher(
     let res = Cipher::updater(&db_state, nid, &new_val);
     if res == 0 {
         Err(ResponseData::new(
-            0,
+            401,
             "Update cipher failed!".into(),
             json!({
                 "col": res,
@@ -111,7 +116,7 @@ pub fn update_cipher(
         ))
     } else {
         Ok(ResponseData::new(
-            1,
+            200,
             "Update cipher success!".into(),
             json!(
                 {
