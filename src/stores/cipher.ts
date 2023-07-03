@@ -27,6 +27,9 @@ export const useCipherStore = defineStore("cipher-store", {
         )
       })
     },
+    getFilteredLength() {
+      return this.filteredCiphers.length
+    },
   },
 
   actions: {

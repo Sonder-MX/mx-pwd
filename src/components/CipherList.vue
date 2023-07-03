@@ -1,6 +1,14 @@
 <template>
   <q-scroll-area class="fit">
-    <q-list>
+    <div v-if="!cipherStore.getFilteredLength" style="text-align: center; padding: 50px 0">
+      <div>
+        <q-icon name="las la-inbox" class="text-grey-8" size="5em" />
+      </div>
+      <div>
+        <p class="text-caption text-grey-6">暂无数据</p>
+      </div>
+    </div>
+    <q-list v-else>
       <q-item
         v-for="cipherItem in cipherStore.filteredCiphers"
         :key="cipherItem.nid"
@@ -17,8 +25,6 @@
           <q-item-label lines="1" caption>{{ cipherItem.username }}</q-item-label>
         </q-item-section>
       </q-item>
-
-      <q-item v-for="itm in 30" :key="itm"> list {{ itm }} </q-item>
 
       <!-- 占位 -->
       <div style="height: 50px"></div>

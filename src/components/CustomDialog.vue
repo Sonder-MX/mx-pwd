@@ -101,6 +101,7 @@ import { reactive, ref, computed } from "vue"
 import { invoke } from "@tauri-apps/api"
 import { useCipherStore } from "stores/cipher"
 import { useDialogPluginComponent } from "quasar"
+import { useQuasar } from "quasar"
 
 const props = defineProps({
   cid: {
@@ -114,6 +115,7 @@ defineEmits([
   ...useDialogPluginComponent.emits,
 ])
 
+const $q = useQuasar()
 const { dialogRef, onDialogHide, onDialogOK, onDialogCancel } = useDialogPluginComponent()
 // dialogRef      - 用在 QDialog 上的 Vue ref 模板引用
 // onDialogHide   - 处理 QDialog 上 @hide 事件的函数
@@ -145,8 +147,33 @@ const isOKBtnDisabled = computed(() => {
 
 // 这是示例的内容，不是必需的
 const onAddClick = () => {
+  console.log(loginInfo)
+  invoke("add_cipher", {
+    website: loginInfo.website,
+    username: loginInfo.username,
+    password: loginInfo.password,
+    remark: loginInfo.remark,
+  })
+    .then((_) => {
+      // console.log(res)
+      $q.notify({
+        type: "positive",
+        position: "top",
+        timeout: 1200,
+        message: "添加成功！",
+      })
+      onDialogOK()
+      cipherStore.fetchCiphers()
+    })
+    .catch(() => {
+      $q.notify({
+        type: "negative",
+        position: "top",
+        timeout: 1200,
+        message: "信息添加失败，请重试！",
+      })
+    })
   // REQUIRED！ 对话框的结果为 ok 时，必须调用 onDialogOK()  (参数是可选的)
-  onDialogOK()
   // 带参数的版本: onDialogOK({ ... })
   // ...会自动关闭对话框
 }
