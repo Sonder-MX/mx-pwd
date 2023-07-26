@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-use super::ResponseData;
+use super::{Response, ResponseData};
 use crate::models::Models;
 use crate::Cipher;
 use crate::DBState;
@@ -62,33 +62,6 @@ pub fn add_cipher(
 }
 
 #[tauri::command]
-pub fn delete_cipher(
-    db_state: tauri::State<'_, DBState>,
-    nid: &str,
-) -> Result<ResponseData, ResponseData> {
-    let res = Cipher::deleter(&db_state, nid);
-    if res == 0 {
-        Err(ResponseData::new(
-            401,
-            "Delete cipher failed!".into(),
-            json!({
-                "col": res,
-            }),
-        ))
-    } else {
-        Ok(ResponseData::new(
-            200,
-            "Delete cipher success!".into(),
-            json!(
-                {
-                    "col": res,
-                }
-            ),
-        ))
-    }
-}
-
-#[tauri::command]
 pub fn update_cipher(
     db_state: tauri::State<'_, DBState>,
     nid: &str,
@@ -124,5 +97,16 @@ pub fn update_cipher(
                 }
             ),
         ))
+    }
+}
+
+#[tauri::command]
+pub fn delete_cipher(db_state: tauri::State<'_, DBState>, nid: &str) -> Response<String> {
+    let res = Cipher::deleter(&db_state, nid);
+    if res == 0 {
+        // failed
+        Response::error("信息删除失败！".into())
+    } else {
+        Response::success()
     }
 }
