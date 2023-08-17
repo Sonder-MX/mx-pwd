@@ -20,35 +20,35 @@ impl ResponseData {
 
 #[derive(Serialize)]
 pub struct Response<T> {
-    code: u8, // 0:成功 1:失败
+    code: u8, // 1:成功 0:失败
     msg: Option<String>,
     data: Option<T>,
 }
 
 impl<T> Response<T> {
     fn new(code: u8, msg: Option<String>, data: Option<T>) -> Self {
-        Response { code, msg, data }
+        Self { code, msg, data }
     }
 
     #[allow(dead_code)]
-    pub fn set_code(&mut self, code: u8) {
-        self.code = code;
+    pub fn set_msg(&mut self, msg: &str) {
+        self.msg = Some(msg.to_owned());
     }
 
     #[allow(dead_code)]
-    pub fn set_msg(&mut self, msg: String) {
-        self.msg = Some(msg);
+    pub fn set_data(&mut self, data: T) {
+        self.data = Some(data);
     }
 
     pub fn success() -> Self {
-        Self::new(0, None, None)
+        Self::new(1, Some("success".to_owned()), None)
     }
 
-    pub fn success_with_data(msg: Option<String>, data: Option<T>) -> Self {
-        Self::new(0, msg, data)
+    pub fn success_with_data(data: T) -> Self {
+        Self::new(1, Some("success".to_owned()), Some(data))
     }
 
-    pub fn error(msg: String) -> Self {
-        Self::new(1, Some(msg), None)
+    pub fn fail() -> Self {
+        Self::new(0, Some("fail".to_owned()), None)
     }
 }

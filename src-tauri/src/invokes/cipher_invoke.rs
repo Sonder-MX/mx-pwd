@@ -101,11 +101,10 @@ pub fn update_cipher(
 }
 
 #[tauri::command]
-pub fn delete_cipher(db_state: tauri::State<'_, DBState>, nid: &str) -> Response<String> {
+pub fn delete_cipher(db_state: tauri::State<'_, DBState>, nid: &str) -> Response<u8> {
     let res = Cipher::deleter(&db_state, nid);
     if res == 0 {
-        // failed
-        Response::error("信息删除失败！".into())
+        Response::fail()
     } else {
         Response::success()
     }
