@@ -1,111 +1,116 @@
-use std::collections::HashMap;
+use chrono::prelude::Local;
+use nanoid::nanoid;
+use rusqlite::params;
+use tauri::State;
 
-use super::{Response, ResponseData};
-use crate::models::Models;
-use crate::Cipher;
-use crate::DBState;
-use serde_json::json;
+use super::Response;
+use crate::entity::cipher::{Cipher, CreateCipher};
+use crate::entity::DBState;
+use crate::utils::constant::*;
 
 #[tauri::command]
-pub fn get_cipher_list(db_state: tauri::State<'_, DBState>) -> Vec<HashMap<String, String>> {
+pub fn add_cipher(db_state: State<'_, DBState>, mut cipher: CreateCipher) -> Response<u8> {
     let conn = db_state.conn.lock().unwrap();
-    Cipher::overview(&conn)
+
+    cipher.nid = Some(nanoid!());
+    let date_time = Local::now().naive_local();
+
+    let row = conn.execute(
+        "insert into cipher (nid, website, username, password, remark, created, updated) values (?1, ?2, ?3, ?4, ?5, ?6, ?7)",
+        params![cipher.nid, cipher.website, cipher.username, cipher.password, cipher.remark, date_time, date_time],
+    );
+
+    if row.is_err() {
+        Response::error(msg_const::ADD_FAIL)
+    } else {
+        Response::success(Some(msg_const::ADD_SUCCESS.to_string()))
+    }
 }
 
 #[tauri::command]
-pub fn get_cipher_detail(
-    db_state: tauri::State<'_, DBState>,
-    dnid: &str,
-) -> Result<Cipher, ResponseData> {
+pub fn query_cipher(db_state: State<'_, DBState>) -> Response<Vec<Cipher>> {
     let conn = db_state.conn.lock().unwrap();
-    let cipher_detail = Cipher::detail(&conn, dnid);
-    if cipher_detail.is_none() {
-        Err(ResponseData::new(
-            404,
-            "Cipher detail not found!".into(),
-            json!(null),
-        ))
+
+    let mut stmt = conn.prepare("select * from cipher").unwrap();
+
+    let cipher_iter = stmt
+        .query_map(params![], |row| {
+            Ok(Cipher {
+                nid: row.get(0)?,
+                website: row.get(1)?,
+                username: row.get(2)?,
+                password: row.get(3)?,
+                remark: row.get(4)?,
+                created: row.get(5)?,
+                updated: row.get(6)?,
+            })
+        })
+        .unwrap();
+
+    let mut ciphers = Vec::new();
+    for cipher in cipher_iter {
+        ciphers.push(cipher.unwrap());
+    }
+    Response::success_with_data(ciphers)
+}
+
+#[tauri::command]
+pub fn delete_cipher(db_state: State<'_, DBState>, nid: String) -> Response<u8> {
+    let conn = db_state.conn.lock().unwrap();
+
+    let row = conn.execute("delete from cipher where nid = ?1", params![nid]);
+
+    if row.is_err() {
+        Response::error(msg_const::DELETE_FAIL)
     } else {
-        Ok(cipher_detail.unwrap().unwrap())
+        Response::success(Some(msg_const::DELETE_SUCCESS.to_string()))
     }
 }
 
 #[tauri::command]
-pub fn add_cipher(
-    db_state: tauri::State<'_, DBState>,
-    website: &str,
-    username: &str,
-    password: &str,
-    remark: &str,
-) -> Result<ResponseData, ResponseData> {
-    let cipher = Cipher::new(website, username, password, remark);
-    let res = Cipher::adder(&db_state, cipher);
-    if res == 0 {
-        Err(ResponseData::new(
-            401,
-            "Add cipher failed!".into(),
-            json!({
-                "col": res,
-            }),
-        ))
+pub fn update_cipher(db_state: State<'_, DBState>, mut cipher: Cipher) -> Response<u8> {
+    let conn = db_state.conn.lock().unwrap();
+
+    cipher.updated = Local::now().naive_local();
+    let row = conn.execute(
+        "update cipher set website = ?1, username = ?2, password = ?3, remark = ?4, updated = ?5 where nid = ?6",
+        params![cipher.website, cipher.username, cipher.password, cipher.remark, cipher.updated, cipher.nid],
+    );
+
+    if row.is_err() {
+        Response::error(msg_const::UPDATE_FAIL)
     } else {
-        Ok(ResponseData::new(
-            200,
-            "Add cipher success!".into(),
-            json!(
-                {
-                    "col": res,
-                }
-            ),
-        ))
+        Response::success(Some(msg_const::UPDATE_SUCCESS.to_string()))
     }
 }
 
 #[tauri::command]
-pub fn update_cipher(
-    db_state: tauri::State<'_, DBState>,
-    nid: &str,
-    website: &str,
-    username: &str,
-    password: &str,
-    remark: &str,
-) -> Result<ResponseData, ResponseData> {
-    let now = Cipher::get_now_time();
-    let new_val = HashMap::from([
-        (Cipher::FIELDS[1], website),
-        (Cipher::FIELDS[2], username),
-        (Cipher::FIELDS[3], password),
-        (Cipher::FIELDS[4], remark),
-        (Cipher::FIELDS[6], &now),
-    ]);
-    let res = Cipher::updater(&db_state, nid, &new_val);
-    if res == 0 {
-        Err(ResponseData::new(
-            401,
-            "Update cipher failed!".into(),
-            json!({
-                "col": res,
-            }),
-        ))
-    } else {
-        Ok(ResponseData::new(
-            200,
-            "Update cipher success!".into(),
-            json!(
-                {
-                    "col": res,
-                }
-            ),
-        ))
-    }
-}
+pub fn query_cipher_by_nid(db_state: State<'_, DBState>, nid: String) -> Response<Cipher> {
+    let conn = db_state.conn.lock().unwrap();
 
-#[tauri::command]
-pub fn delete_cipher(db_state: tauri::State<'_, DBState>, nid: &str) -> Response<u8> {
-    let res = Cipher::deleter(&db_state, nid);
-    if res == 0 {
-        Response::fail()
+    let mut stmt = conn.prepare("select * from cipher where nid = ?1").unwrap();
+
+    let cipher_iter = stmt
+        .query_map(params![nid], |row| {
+            Ok(Cipher {
+                nid: row.get(0)?,
+                website: row.get(1)?,
+                username: row.get(2)?,
+                password: row.get(3)?,
+                remark: row.get(4)?,
+                created: row.get(5)?,
+                updated: row.get(6)?,
+            })
+        })
+        .unwrap();
+
+    let mut ciphers = Vec::new();
+    for cipher in cipher_iter {
+        ciphers.push(cipher.unwrap());
+    }
+    if ciphers.len() > 0 {
+        Response::success_with_data(ciphers[0].clone())
     } else {
-        Response::success()
+        Response::error("查询失败")
     }
 }
